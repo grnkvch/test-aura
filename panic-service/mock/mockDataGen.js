@@ -19,7 +19,7 @@ function RandomLoc(){
 const pathNamesFile = path.join(__dirname, './randomNames.txt')
 const pathCompanyFile = path.join(__dirname, './randomCompany.txt')
 const pathGuardFile = path.join(__dirname, './randomGuradCompany.txt')
-const pathToWrite = path.join(__dirname, './otput.sql')
+const pathToWrite = path.join(__dirname, './otput2.sql')
 
 const namesRaw = fs.readFileSync(pathNamesFile).toString()
 const namesArray = namesRaw.split('\n').map((i)=>i.split(' '))
@@ -49,7 +49,8 @@ const a = namesArray.reduce((acc, i, index)=>{
   GURADS_COUNT += 1
   const id = uuid.v4()
   guardsUuid.push(id)
-  acc.guards[id] = (`('${id}','${i[0]}', '${i[1]}', '${guardArray[randomFloat(0, guardArray.length - 1), 0]}', 'guard')`)
+  console.log()
+  acc.guards[id] = (`('${id}','${i[0]}', '${i[1]}', '${guardArray[randomFloat(0, guardArray.length - 1, 0)]}', 'guard')`)
   return acc
 }, {
   admin: [],
