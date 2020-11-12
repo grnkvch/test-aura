@@ -28,6 +28,7 @@ export class User implements Partial<IUser> {
     organization?: string;
     user_role: 'admin'|'guard'|'client';
     body: Omit<IUser, 'id'>;
+    queryStringParameters: any;
     error: any;
     constructor(event: APIGatewayProxyEvent){
       const { id, body } = this.parseEvent(event)
@@ -38,7 +39,10 @@ export class User implements Partial<IUser> {
     }
     parseEvent(event: APIGatewayProxyEvent){
       const { id } = (event.pathParameters || {})
+      const { queryStringParameters } = event
+      console.log('queryStringParameters', queryStringParameters)
       const { body } = event
+      console.log('body', body)
       let parsedBody: IUser
       if(body){
         try {
@@ -48,6 +52,7 @@ export class User implements Partial<IUser> {
           return { id, body: parsedBody }
         }  
       }
+      if(queryStringParameters) this.queryStringParameters = queryStringParameters
       return { id, body: parsedBody }
     }
     
@@ -74,7 +79,10 @@ export class User implements Partial<IUser> {
 
     getUsersList(){
       if(this.error) return Promise.resolve({error: this.error})
-      return validateSchema(()=>db.getUsersList())
+      return validateSchema(()=>db.getUsersList(this.queryStringParameters), 
+        this.queryStringParameters, 
+        commonSchema
+      )
     }
 
     getUser(){

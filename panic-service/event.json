@@ -4,7 +4,7 @@
     "path": "/path/to/resource",
     "httpMethod": "POST",
     "isBase64Encoded": true,
-    "queryStringParameters": null,
+    "queryStringParameters": { "user_role": "admin" },
     "multiValueQueryStringParameters": null,
     "pathParameters": { "id": "f8864f7a-0d5a-4a5f-b6f0-39d4b308578f" },
     "stageVariables": null,

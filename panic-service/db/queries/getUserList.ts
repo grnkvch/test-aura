@@ -8,7 +8,7 @@ export function getUserList(userProperties?: Partial<IUser>): [string]{
   u.organization,
   u.user_role
   from users u `
-
+  console.log(userProperties)
   if(userProperties){
     const entries = Object.entries(userProperties)
     if(entries.length) {
