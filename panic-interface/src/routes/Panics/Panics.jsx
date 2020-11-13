@@ -15,8 +15,8 @@ const column = [
   { id: 'resolved_at', label: 'Resolved at', format: dateFormatter },
 ]
 
-function createRow({n, created_at, guard_id, resolved_at}) {
-  return [n, created_at, guard_id, resolved_at]
+function createRow({n, created_at, guard_id, resolved_at, id}) {
+  return [n, created_at, guard_id, resolved_at, id]
 }
 
 export function Panics() {
@@ -29,6 +29,7 @@ export function Panics() {
     {data && <TableComponent 
       columns={column}
       rows={data.map((i, index)=>createRow({n:index+1, ...i}))}
+      baseRoute={'Panics'}
     />}
   </div>
 }

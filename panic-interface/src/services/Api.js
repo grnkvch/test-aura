@@ -8,6 +8,18 @@ export class NativeApiService extends ApiService {
   getClientsList(){
     return super.get('/users?user_role=client')
   }
+  getUser(id){
+    return super.get(`/users/${id}`)
+  }
+  updateUser(id, values){
+    return super.put(`/users/${id}`, values)
+  }
+  createUser(id, values){
+    return super.post('/users', values)
+  }
+  deleteUser(id){
+    return super.delete(`/users/${id}`)
+  }
   getPanicsList(){
     return super.get('/panics')
   }

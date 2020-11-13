@@ -27,7 +27,7 @@ export class ApiService {
     return result.data
   }
 
-  async remove(path, config) {
+  async delete(path, config) {
     const result = await this.axiosInstance.delete(path, config)
     return result.data
   }

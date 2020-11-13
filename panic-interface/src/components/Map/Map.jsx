@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect,  useMemo,  useRef,  useState } from 'react'
+import React, { useCallback, useEffect, useRef,  useState } from 'react'
 import ReactMapboxGl, { Marker, ZoomControl, Popup, Cluster } from 'react-mapbox-gl'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
@@ -10,7 +10,8 @@ import { parseCoordinates } from '../utils'
 
 import SecurityIcon from '@material-ui/icons/Security'
 import WarningIcon from '@material-ui/icons/Warning'
-import { PanicPopup, GuardPopup } from './components'
+import { PanicDetailsView } from '../PanicDetailsView'
+import { GuardDetailsView } from '../GuardDetailsView'
 
 const createClusterMarker = (Icon)=> function ClusterMarker(coords, number) {
   return (
@@ -95,7 +96,7 @@ export const Map = function() {
             'bottom-left': [12, -38],  'bottom': [0, -38], 'bottom-right': [-12, -38]
           }}>
           {info 
-            ? info.created_at ? <PanicPopup {...info}/> : <GuardPopup {...info}/>
+            ? info.created_at ? <PanicDetailsView {...info}/> : <GuardDetailsView {...info}/>
             : <div className={style.loader} />}
         </Popup>}    
       </MapComponent>

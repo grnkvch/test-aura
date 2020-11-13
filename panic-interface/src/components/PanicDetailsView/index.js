@@ -1,0 +1,1 @@
+export { PanicDetailsView } from './PanicDetailsView'
