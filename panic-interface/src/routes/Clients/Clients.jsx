@@ -9,9 +9,9 @@ const column = [
   { id: 'surname', label: 'Surname' },
   { id: 'organization', label: 'Organization' },
 ]
-
-function createRow({n, name, surname, organization}) {
-  return [n, name, surname, organization]
+// last elemetn should be unique id to support routing(optional)
+function createRow({n, name, surname, organization, id}) {
+  return [n, name, surname, organization, id]
 }
 
 export function Clients() {
@@ -24,6 +24,7 @@ export function Clients() {
     {data && <TableComponent 
       columns={column}
       rows={data.map((i, index)=>createRow({n:index+1, ...i}))}
+      baseRoute={'User/client'}
     />}
   </div>
 }

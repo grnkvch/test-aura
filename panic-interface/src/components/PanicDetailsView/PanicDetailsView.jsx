@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -7,8 +7,9 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
-import { dateFormatter } from '../../utils'
-import { Dot } from '../../Dot'
+import { dateFormatter } from '../utils'
+import { Dot } from '../Dot'
+import { useHistory } from 'react-router-dom'
 
 function renderDot(v){
   return <Dot color={v ? 'green' : 'red'}></Dot>
@@ -18,9 +19,13 @@ const useStyles = makeStyles({
   table: {
     maxWidth: 280,
   },
+  container: {
+    maxWidth: 280,
+  }
 })
 
-export function PanicPopup({
+export function PanicDetailsView({
+  id,
   created_at,
   resolved_at,
   guard_id,
@@ -44,7 +49,6 @@ export function PanicPopup({
     { id: 'user_organization',label:'Organization', value: user_organization },
   ]
 
-
   const tablesData = [
     {table: 'Panic', info: panicInfo},
     {table: 'Client', info: userInfo},
@@ -58,9 +62,16 @@ export function PanicPopup({
     ]
     tablesData.push({table: 'Guard', info: guardInfo})
   }
-  console.log(tablesData)
+  const history = useHistory()
+  const onClick = useCallback(()=>{
+    const { location: { pathname } } = history
+    if(pathname !== `Panics/${id}`){
+      history.push(`/Panics/${id}`)
+    }
+  })
+
   return (
-    <TableContainer component={Paper}>
+    <TableContainer onClick={onClick} className={classes.container} component={Paper}>
       {tablesData.map(({table, info})=>(
         <Table size="small" key={table} className={classes.table} aria-label="simple table">
           <TableHead>

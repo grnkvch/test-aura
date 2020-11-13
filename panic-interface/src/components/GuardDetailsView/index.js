@@ -1,0 +1,1 @@
+export { GuardDetailsView } from './GuardDetailsView'

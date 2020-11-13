@@ -7,8 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
-import { dateFormatter } from '../../utils'
-import { Dot } from '../../Dot'
+import { Dot } from '../Dot'
 
 function renderDot(v){
   return <Dot color={v ? 'green' : 'red'}></Dot>
@@ -20,7 +19,7 @@ const useStyles = makeStyles({
   },
 })
 
-export function GuardPopup({
+export function GuardDetailsView({
   name, 
   surname,  
   organization, 

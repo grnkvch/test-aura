@@ -1,0 +1,1 @@
+export { PanicsDetails } from './PanicsDetails'
