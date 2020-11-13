@@ -2,6 +2,7 @@ import { APIGatewayProxyHandler } from 'aws-lambda'
 
 import { Panic } from '../db/models/Panic'
 import { catchError, response } from '../utils'
+import { addWSNotif } from '../utils/addWSNotif'
 
 export const getPanic: APIGatewayProxyHandler = catchError(async (event) => {
   const item = await new Panic(event).getPanic()
@@ -9,12 +10,12 @@ export const getPanic: APIGatewayProxyHandler = catchError(async (event) => {
   if(!item) return response('Such panic not found', 404)
   return response(item)
 })
-export const createPanic: APIGatewayProxyHandler = catchError(async (event) => {
+export const createPanic: APIGatewayProxyHandler = addWSNotif('new_panic', catchError(async (event) => {
   const item = await new Panic(event).createPanic()
   if(item?.error) return response(item?.error, 400)
   if(!item) return response('Such panic not found', 404)
   return response(item, 201)
-})
+}))
 export const attachGurad: APIGatewayProxyHandler = catchError(async (event) => {
   const item = await new Panic(event).attachGuradToPanic()
   if(item?.error) return response(item?.error, 400)

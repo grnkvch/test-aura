@@ -11,6 +11,7 @@ import { createUser,
   resolvePanic,
   getPanicsList,
   getPanic } from './queries'
+import { addConnection, deleteConnection, getConnection } from './queries/connections'
  
 const { PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD } = process.env
 const dbOptions: ClientConfig = {
@@ -67,6 +68,10 @@ export interface IPanic {
   geolocation: GeolocationType;
   created_at?: string;
   resolved_at?: string;
+}
+
+export interface IConnetionId {
+  connection_id: string;
 }
 
 class DB {
@@ -154,6 +159,26 @@ class DB {
     return connectToDb(async (client: Client): Promise<IPanic> =>{
       const dbResponse = await client.query(...getPanic(panicId))
       return dbResponse.rows[0]
+    })
+  }
+
+  addConnection(connection_id: string){
+    return connectToDb(async (client: Client): Promise<void> =>{
+      await client.query(...addConnection(connection_id))
+    })
+  }
+
+  deleteConnection(connection_id: string){
+    return connectToDb(async (client: Client): Promise<IConnetionId> =>{
+      const dbResponse = await client.query(...deleteConnection(connection_id))
+      return dbResponse.rows[0]
+    })
+  }
+
+  getConnection(){
+    return connectToDb(async (client: Client): Promise<IConnetionId[]> =>{
+      const dbResponse = await client.query(...getConnection())
+      return dbResponse.rows
     })
   }
 }

@@ -202,6 +202,26 @@ const serverlessConfiguration: Serverless = {
         }
       ]
     },
+    connect: {
+      handler: 'handler.connect',
+      events: [
+        {
+          websocket: {
+            route: '$connect',
+          }
+        }
+      ]
+    },
+    disconnect: {
+      handler: 'handler.disconcect',
+      events: [
+        {
+          websocket: {
+            route: '$disconnect',
+          }
+        }
+      ]
+    }
   }
 }
 
