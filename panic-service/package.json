@@ -6,9 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "runfn": "sls invoke local --function",
-    "deploy": "sls deploy"
+    "deploy": "sls deploy",
+    "deployfn": "sls deploy -f"
   },
   "dependencies": {
+    "aws-sdk": "^2.791.0",
     "joi": "^17.3.0",
     "pg": "^8.4.2",
     "source-map-support": "^0.5.10"

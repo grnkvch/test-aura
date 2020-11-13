@@ -11,4 +11,5 @@ module.exports = {
   PG_DATABASE:process.env.PG_DATABASE,
   PG_USERNAME:process.env.PG_USERNAME,
   PG_PASSWORD:process.env.PG_PASSWORD,
+  SOCKET_END_POINT:process.env.SOCKET_END_POINT,
 }
