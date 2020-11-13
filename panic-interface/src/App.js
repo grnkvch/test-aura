@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useRef } from 'react'
+import { ApiProvider, MainLayout } from './components'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from 'react-router-dom'
+import './App.css'
+import { Api } from './services'
+import { Home, Guards, Clients, Panics } from './routes'
 
 function App() {
+  const ref = useRef(Api).current
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <ApiProvider api={ref}>
+      <Router>
+        <Switch>
+          <Route path="/">
+            <MainLayout>
+              <Route exact path="/Home">
+                <Home />
+              </Route>
+              <Route exact path="/Guards">
+                <Guards />
+              </Route>
+              <Route exact path="/Clients">
+                <Clients />
+              </Route>
+              <Route exact path="/Panics">
+                <Panics />
+              </Route>
+            </MainLayout>
+          </Route>
+        </Switch>
+      </Router>
+    </ApiProvider>
+    
+  )
 }
 
-export default App;
+export default App
