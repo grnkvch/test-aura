@@ -5,10 +5,12 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from 'react-router-dom'
 import './App.css'
 import { Api } from './services'
-import { Home, Guards, Clients, Panics } from './routes'
+import { Home, Guards, Clients, Panics, PanicsDetails } from './routes'
+import { User } from './routes/User'
 
 function App() {
   const ref = useRef(Api).current
@@ -18,6 +20,9 @@ function App() {
         <Switch>
           <Route path="/">
             <MainLayout>
+              <Route exact path={'/'}>
+                <Redirect to="/Home" />
+              </Route>
               <Route exact path="/Home">
                 <Home />
               </Route>
@@ -29,6 +34,12 @@ function App() {
               </Route>
               <Route exact path="/Panics">
                 <Panics />
+              </Route>
+              <Route exact path={['/User/:role/:id', '/User/:role']}>
+                <User />
+              </Route>
+              <Route exact path={'/Panics/:id'}>
+                <PanicsDetails />
               </Route>
             </MainLayout>
           </Route>

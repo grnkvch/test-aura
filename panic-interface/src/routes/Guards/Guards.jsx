@@ -19,8 +19,8 @@ const column = [
   },
 ]
 
-function createRow({id, name, surname, organization, available}) {
-  return [id, name, surname, organization, available]
+function createRow({id, name, surname, organization, available, user_id}) {
+  return [id, name, surname, organization, available, user_id]
 }
 
 export function Guards() {
@@ -33,6 +33,7 @@ export function Guards() {
     {data && <TableComponent 
       columns={column}
       rows={data.map(i=>createRow(i))}
+      baseRoute={'User/guard'}
     />}
   </div>
 }
