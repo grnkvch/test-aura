@@ -10,7 +10,7 @@ export async function validateSchema<T, U>(
       abortEarly: false,
       allowUnknown: false
     }) 
-    if (error.isJoi) return { value: null, error }
+    if (error.isJoi) return { value: null, error: error.annotate() }
   }
 
   return cb()

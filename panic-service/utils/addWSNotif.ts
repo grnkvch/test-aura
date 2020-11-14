@@ -3,7 +3,28 @@ import { responseType } from './response'
 
 const AWS = require('aws-sdk')
 
-export function addWSNotif(message: string, cb: (...any)=>Promise<responseType>){
+export const socketActions = [
+  'new_panic',
+  'new_user',
+  'delete_user',
+  'update_user',
+  'guard_attached',
+  'panic_resolved',
+  'guard_geolocation_update',
+  'guard_availability_update'
+] as const
+type ElementType < T extends ReadonlyArray < unknown > > = T extends ReadonlyArray<
+  infer ElementType
+>
+  ? ElementType
+  : never
+
+export type SocketActionsType = ElementType<typeof socketActions>
+
+function data(action: string, data: string) {
+  return `{ "action": "${action}", "data":${data} }`
+}
+export function addWSNotif(action: SocketActionsType, cb: (...any)=>Promise<responseType>){
   return async function (...args: any[]):Promise<responseType> {
     
     const value = await cb(...args)
@@ -22,7 +43,12 @@ export function addWSNotif(message: string, cb: (...any)=>Promise<responseType>)
 
     const postCalls = connectionsIds.map(async ({ connection_id }) => {
       try {
-        await apigwManagementApi.postToConnection({ ConnectionId: connection_id, Data: message }).promise()
+        await apigwManagementApi
+          .postToConnection({ 
+            ConnectionId: connection_id,
+            Data: data(action, value.body) 
+          })
+          .promise()
       } catch (e) {
         if (e.statusCode === 410) {
           console.log(`Found stale connection, deleting ${connection_id}`)
