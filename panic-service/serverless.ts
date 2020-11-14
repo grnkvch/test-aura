@@ -31,6 +31,7 @@ const serverlessConfiguration: Serverless = {
       PG_DATABASE:config.PG_DATABASE,
       PG_USERNAME:config.PG_USERNAME,
       PG_PASSWORD:config.PG_PASSWORD,
+      SOCKET_END_POINT:config.SOCKET_END_POINT
     },
   },
   functions: {

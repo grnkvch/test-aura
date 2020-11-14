@@ -14,13 +14,39 @@ const geolocationSchema = Joi.object({
 const availabilitySchema = Joi.object({
   available: Joi.boolean().required(),
 })
+
+Joi.object({
+  id: Joi.number(),
+  user_id: Joi.string(),
+  name: Joi.string(),
+  surname: Joi.string(),
+  organization: Joi.string(),
+  user_role: Joi.string().valid('guard'),
+  available: Joi.boolean(),
+  geolocation: Joi.object({
+    lat: Joi.number().required(),
+    lon: Joi.number().required()
+  }).error(()=>{
+    const error = new Joi.ValidationError()
+    error.details = [{
+      message: 'To get closest guard pass query param such as \'close_to=[lon],[lat]\', e.g. \'close_to=-23.3424,65.1231231\''
+    }]
+    return error
+  })
+})
   
 
 const idSchema = Joi.number().required()
 
+function parseCloseToParameter(close_to: string){
+  const [,lon, lat] = /(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/.exec(close_to) || []
+
+  return { lon, lat }
+}
 export class Guard implements Partial<IGuard> {
     id: number;
     body: Omit<IGuard, 'id'>;
+    queryStringParameters: any;
     error: any;
     constructor(event: APIGatewayProxyEvent){
       const { id, body } = this.parseEvent(event)
@@ -31,6 +57,7 @@ export class Guard implements Partial<IGuard> {
     }
     parseEvent(event: APIGatewayProxyEvent){
       const { id } = event.pathParameters || {}
+      const { queryStringParameters } = event
       const { body } = event
       let parsedBody: IGuard
       if(body){
@@ -41,12 +68,19 @@ export class Guard implements Partial<IGuard> {
           return { id: Number(id), body: parsedBody }
         }  
       }
+      if(queryStringParameters) this.queryStringParameters = queryStringParameters
       return { id: Number(id), body: parsedBody }
     }
     
     getGuardsList(){
       if(this.error) return Promise.resolve({error: this.error})
-      return validateSchema(()=>db.getGuardsList())
+      let properties
+      if( this.queryStringParameters){
+        const  { close_to, ...rest } = this.queryStringParameters
+        rest.geolocation = parseCloseToParameter(close_to)
+        properties = rest
+      }
+      return validateSchema(()=>db.getGuardsList(properties))
     }
 
     getGuard(){

@@ -21,12 +21,8 @@ const commonSchema = Joi.object({
 
 const idSchema = Joi.string().guid().required()
 
-export class User implements Partial<IUser> {
+export class User {
     id?: string;
-    name: string;
-    surname?: string;
-    organization?: string;
-    user_role: 'admin'|'guard'|'client';
     body: Omit<IUser, 'id'>;
     queryStringParameters: any;
     error: any;
@@ -40,9 +36,7 @@ export class User implements Partial<IUser> {
     parseEvent(event: APIGatewayProxyEvent){
       const { id } = (event.pathParameters || {})
       const { queryStringParameters } = event
-      console.log('queryStringParameters', queryStringParameters)
       const { body } = event
-      console.log('body', body)
       let parsedBody: IUser
       if(body){
         try {
