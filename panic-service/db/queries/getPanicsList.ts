@@ -14,12 +14,12 @@ export function getPanicsList(properties?: Pick<Partial<IPanic>, 'id'|'user_id'|
     const { id, user_id, guard_id } = properties
     const entries = Object.entries({ id,user_id,guard_id })
     if(entries.length) {
-      const userFieldsString = entries.reduce((acc, [key, value], index, {length})=>{
+      const fieldsString = entries.reduce((acc, [key, value], index, {length})=>{
         acc += `p.${key} = '${value}'`
-        if(index !== length -1) acc+=', '
+        if(index !== length -1) acc+=' and '
         return acc
       }, '')
-      query+=`where ${userFieldsString}`
+      query+=`where ${fieldsString}`
     }
   }
 
