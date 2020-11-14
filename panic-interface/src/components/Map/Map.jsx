@@ -12,6 +12,7 @@ import SecurityIcon from '@material-ui/icons/Security'
 import WarningIcon from '@material-ui/icons/Warning'
 import { PanicDetailsView } from '../PanicDetailsView'
 import { GuardDetailsView } from '../GuardDetailsView'
+import { MapComponent } from '../MapComponent'
 
 const createClusterMarker = (Icon)=> function ClusterMarker(coords, number) {
   return (
@@ -26,11 +27,8 @@ const createClusterMarker = (Icon)=> function ClusterMarker(coords, number) {
 const panicCluster = createClusterMarker(WarningIcon)
 const guardCluster = createClusterMarker(SecurityIcon)
 
-const MapComponent = ReactMapboxGl({ accessToken: apiKeys.MAPBOX_ACCESS_TOKEN })
-
 export const Map = function() {
   const api = useApi()
-  const mapViewBox = useRef({ center:[27, 53], zoom:[7] })
   const [panics, setPanics] = useState([])
   const [guards, setGuards] = useState([])
   const [popup, setPopup] = useState(null)
@@ -54,53 +52,42 @@ export const Map = function() {
     setPopup(null)
   }, [])
 
-  const onMapMove = useCallback((onMoveEvent) => {
-    const { lng, lat } = onMoveEvent.getCenter()
-    const zoom =onMoveEvent.getZoom()
-    mapViewBox.current.center = [lng, lat]
-    mapViewBox.current.zoom = [zoom]
-  }, [])
-
-  return (
-    <>
-      <MapComponent
-        style="mapbox://styles/mapbox/streets-v9"
-        containerStyle={{
-          height: '100%',
-          width: '100%',
-        }}
-        {...mapViewBox.current}
-        onMove={onMapMove}
-        onClick={mapOnClick} 
-      >
-        <ZoomControl />
-        <Cluster ClusterMarkerFactory={panicCluster}> 
-          {panics.map((item)=> {
-            const { lon, lat}= parseCoordinates(item.gelocation)
-            return(
-              <Marker onClick={()=>markerClickHandler(item)} key={''+lon+lat} coordinates={[lon,lat]}>
-                <WarningIcon htmlColor={item.resolved_at ? '#2EE454' : '#E4323F'}></WarningIcon>
-              </Marker>)})}
-        </Cluster> 
-        <Cluster ClusterMarkerFactory={guardCluster}>  
-          {guards.map((item)=> {
-            const { lon, lat}= parseCoordinates(item.gelocation)
-            return(
-              <Marker onClick={()=>markerClickHandler(item)} key={''+lon+lat} coordinates={[lon,lat]}>
-                <SecurityIcon htmlColor={item.available ? '#328EE4' : '#E4323F'}></SecurityIcon>
-              </Marker>)})}
-        </Cluster>  
-        {popup && <Popup
-          coordinates={popup}
-          offset={{
-            'bottom-left': [12, -38],  'bottom': [0, -38], 'bottom-right': [-12, -38]
-          }}>
-          {info 
-            ? info.created_at ? <PanicDetailsView {...info}/> : <GuardDetailsView {...info}/>
-            : <div className={style.loader} />}
-        </Popup>}    
-      </MapComponent>
-      
-    </>
+  return (<MapComponent
+    style="mapbox://styles/mapbox/streets-v9"
+    containerStyle={{
+      height: '100%',
+      width: '100%',
+    }}
+    center={[27, 53]}
+    zoom={[7]}
+    onClick={mapOnClick} 
+  >
+    <ZoomControl />
+    <Cluster zoomOnClickPadding={100} zoomOnClick ClusterMarkerFactory={panicCluster}> 
+      {panics.map((item)=> {
+        const { lon, lat}= parseCoordinates(item.gelocation)
+        return(
+          <Marker onClick={()=>markerClickHandler(item)} key={''+lon+lat} coordinates={[lon,lat]}>
+            <WarningIcon htmlColor={item.resolved_at ? '#2EE454' : '#E4323F'}></WarningIcon>
+          </Marker>)})}
+    </Cluster> 
+    <Cluster zoomOnClickPadding={100} zoomOnClick ClusterMarkerFactory={guardCluster}>  
+      {guards.map((item)=> {
+        const { lon, lat}= parseCoordinates(item.gelocation)
+        return(
+          <Marker onClick={()=>markerClickHandler(item)} key={''+lon+lat} coordinates={[lon,lat]}>
+            <SecurityIcon htmlColor={item.available ? '#328EE4' : '#E4323F'}></SecurityIcon>
+          </Marker>)})}
+    </Cluster>  
+    {popup && <Popup
+      coordinates={popup}
+      offset={{
+        'bottom-left': [12, -38],  'bottom': [0, -38], 'bottom-right': [-12, -38]
+      }}>
+      {info 
+        ? info.created_at ? <PanicDetailsView {...info}/> : <GuardDetailsView {...info}/>
+        : <div className={style.loader} />}
+    </Popup>}    
+  </MapComponent>
   )
 }

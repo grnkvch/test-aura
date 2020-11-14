@@ -4,6 +4,7 @@ import {makeStyles} from '@material-ui/core/styles'
 import Link from '@material-ui/core/Link'
 import Container from '@material-ui/core/Container'
 import { Header } from '../Header'
+import { IncomingPanicAlert } from '../IncomingPanicAlert'
 
 function Copyright() {
   return (
@@ -49,6 +50,7 @@ export const MainLayout = ({children}) => {
         </Typography>
         <Copyright/>
       </footer>
+      <IncomingPanicAlert></IncomingPanicAlert>
     </>
   )
 }

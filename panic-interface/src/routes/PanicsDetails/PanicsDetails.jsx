@@ -1,16 +1,13 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { HandleError, useApi } from '../../components'
+import { HandleError, MapComponent, useApi } from '../../components'
 import { parseCoordinates } from '../../components/utils'
 import { PanicDetailsView } from '../../components'
-import ReactMapboxGl, { Marker, ZoomControl } from 'react-mapbox-gl'
+import { Marker, ZoomControl } from 'react-mapbox-gl'
 import style from './PanicsDetails.module.css'
-import apiKeys from '../../constansts/apiKeys'
+
 import WarningIcon from '@material-ui/icons/Warning'
-
-
-const MapComponent = ReactMapboxGl({ accessToken: apiKeys.MAPBOX_ACCESS_TOKEN })
 
 export function PanicsDetails() {
   const { id } = useParams()

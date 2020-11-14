@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { ApiProvider, MainLayout } from './components'
+import { ApiProvider, MainLayout, WsListenerProvider } from './components'
 
 import {
   BrowserRouter as Router,
@@ -16,35 +16,37 @@ function App() {
   const ref = useRef(Api).current
   return (
     <ApiProvider api={ref}>
-      <Router>
-        <Switch>
-          <Route path="/">
-            <MainLayout>
-              <Route exact path={'/'}>
-                <Redirect to="/Home" />
-              </Route>
-              <Route exact path="/Home">
-                <Home />
-              </Route>
-              <Route exact path="/Guards">
-                <Guards />
-              </Route>
-              <Route exact path="/Clients">
-                <Clients />
-              </Route>
-              <Route exact path="/Panics">
-                <Panics />
-              </Route>
-              <Route exact path={['/User/:role/:id', '/User/:role']}>
-                <User />
-              </Route>
-              <Route exact path={'/Panics/:id'}>
-                <PanicsDetails />
-              </Route>
-            </MainLayout>
-          </Route>
-        </Switch>
-      </Router>
+      <WsListenerProvider>
+        <Router>
+          <Switch>
+            <Route path="/">
+              <MainLayout>
+                <Route exact path={'/'}>
+                  <Redirect to="/Home" />
+                </Route>
+                <Route exact path="/Home">
+                  <Home />
+                </Route>
+                <Route exact path="/Guards">
+                  <Guards />
+                </Route>
+                <Route exact path="/Clients">
+                  <Clients />
+                </Route>
+                <Route exact path="/Panics">
+                  <Panics />
+                </Route>
+                <Route exact path={['/User/:role/:id', '/User/:role']}>
+                  <User />
+                </Route>
+                <Route exact path={'/Panics/:id'}>
+                  <PanicsDetails />
+                </Route>
+              </MainLayout>
+            </Route>
+          </Switch>
+        </Router>
+      </WsListenerProvider>
     </ApiProvider>
     
   )

@@ -1,5 +1,5 @@
-import React from 'react'
-import { Map } from '../../components'
+import React, { useEffect } from 'react'
+import { Map, useSocketSubscribsion } from '../../components'
 import { makeStyles } from '@material-ui/core'
 
 
@@ -11,6 +11,7 @@ const useStyles = makeStyles(() =>({
 
 export function Home() {
   const classes = useStyles()
+  useSocketSubscribsion(['new_panic', 'new_user'], (a, k)=>console.log(k))
   return <div className={classes.container}>
     <Map />
   </div>
