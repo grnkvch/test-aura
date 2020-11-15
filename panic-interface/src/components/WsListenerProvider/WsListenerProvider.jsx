@@ -13,14 +13,14 @@ export const WsListenerProvider = ({ children }) => {
   const subscriptions = useRef(new Map()).current
   const [connected, setConnected] = useState(false)
 
-  const subscribe = useCallback(function sub(action, cb){
+  const subscribe = useCallback(function sub(action, cb, fireOnInit){
     if(Array.isArray(action)){
-      const unsub = action.map(act=>sub(act, cb))
+      const unsub = action.map(act=>sub(act, cb, fireOnInit))
       return ()=>unsub.forEach(us=>us())
     }else{
       if(!subscriptions.has(action)) subscriptions.set(action, new Set())
       const actionSubscriptions = subscriptions.get(action).add(cb)
-      actionSubscriptions
+      if(fireOnInit) cb()
       return ()=>{
         subscriptions.get(action).delete(cb)
         if(!actionSubscriptions.size) subscriptions.delete(action) 

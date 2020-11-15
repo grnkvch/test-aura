@@ -65,7 +65,7 @@ export function PanicDetailsView({
   const history = useHistory()
   const onClick = useCallback(()=>{
     const { location: { pathname } } = history
-    if(pathname !== `Panics/${id}`){
+    if(pathname !== `/Panics/${id}`){
       history.push(`/Panics/${id}`)
     }
   })

@@ -29,6 +29,21 @@ export class NativeApiService extends ApiService {
   getGuard(id){
     return super.get(`/guards/${id}`)
   }
+  getAvailabileGuards(){
+    return super.get('/guards?available=true')
+  }
+  getClosestGuards(lon, lat){
+    return super.get(`/guards?close_to=${lon},${lat}`)
+  }
+  resolvePanic(id){
+    return super.put(`panics/${id}/resolve`)
+  }
+  attachGurad(id, guard_id){
+    return super.put(`panics/${id}/attachGurad`, { guard_id })
+  }
+  updateAvailability(id, available){
+    return super.put(`guards/${id}/updateAvailability`, { available })
+  }
 }
 
 export const Api = new NativeApiService(API_PATHS.api)

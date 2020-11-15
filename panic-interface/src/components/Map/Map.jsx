@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useRef,  useState } from 'react'
-import ReactMapboxGl, { Marker, ZoomControl, Popup, Cluster } from 'react-mapbox-gl'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Marker, ZoomControl, Popup, Cluster } from 'react-mapbox-gl'
 
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import style from './Map.module.css'
-import apiKeys from '../../constansts/apiKeys'
+
 import { useApi } from '../ApiProvider'
 import { parseCoordinates } from '../utils'
 
@@ -13,8 +13,18 @@ import WarningIcon from '@material-ui/icons/Warning'
 import { PanicDetailsView } from '../PanicDetailsView'
 import { GuardDetailsView } from '../GuardDetailsView'
 import { MapComponent } from '../MapComponent'
+import { useSocket } from '../WsListenerProvider'
+import { PANIC_ACTIONS,
+  GUARD_ACTIONS,
+  DELETE_USER,
+  PANIC_RESOLVED,
+  GUARD_ATTACHED,
+  UPDATE_USER,
+  GUARD_GEOLOCATION_UPDATE,
+  GUARD_AVAILABILITY_UPDATE,
+  USER_ACTIONS } from '../../constansts/socketActions'
 
-const createClusterMarker = (Icon)=> function ClusterMarker(coords, number) {
+export const createClusterMarker = (Icon)=> function ClusterMarker(coords, number) {
   return (
     <Marker key={coords.toString()} coordinates={coords} >
       <div>
@@ -34,10 +44,35 @@ export const Map = function() {
   const [popup, setPopup] = useState(null)
   const [info, setInfo] = useState(null)
 
+  const { subscribe } =  useSocket()
+
   useEffect(()=>{
-    api.getPanicsList().then(r=>setPanics(r))
-    api.getGuardsList().then(r=>setGuards(r))
+    const unsbPanic = subscribe(PANIC_ACTIONS,
+      ()=>api.getPanicsList().then(r=>setPanics(r)), { fireOnInit: true })
+    const unsbGuargs = subscribe([...GUARD_ACTIONS, ...USER_ACTIONS],
+      ({user_role}={})=> (user_role && user_role!=='guard')  
+      || api.getGuardsList().then(r=>setGuards(r)), { fireOnInit: true })
+    
+    return()=>{
+      unsbPanic()
+      unsbGuargs()
+    }
   }, [])
+
+  useEffect(()=>{
+    return info && subscribe(
+      [PANIC_RESOLVED,
+        GUARD_ATTACHED,
+        DELETE_USER,
+        UPDATE_USER,
+        GUARD_GEOLOCATION_UPDATE,
+        GUARD_AVAILABILITY_UPDATE],
+      () => {
+        const method  = typeof info.id  === 'number' ? 'getGuard' : 'getPanic'
+        api[method](info.id).then(r=>setInfo(r))
+      }
+    )
+  }, [info])
 
   const markerClickHandler = useCallback((item)=>{
     setInfo(null)
