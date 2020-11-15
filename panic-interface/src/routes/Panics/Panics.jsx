@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useApi, TableComponent, Dot } from '../../components'
+import { useApi, TableComponent, Dot, useSocket } from '../../components'
 import { dateFormatter } from '../../components/utils'
+import { PANIC_ACTIONS } from '../../constansts/socketActions'
 
 import style from './Panics.module.css'
 
@@ -22,8 +23,11 @@ function createRow({n, created_at, guard_id, resolved_at, id}) {
 export function Panics() {
   const api = useApi()
   const [data, setData] = useState(null)
+
+  const { subscribe } = useSocket()
   useEffect(()=>{
-    api.getPanicsList().then(r=>setData(r))
+    return subscribe([PANIC_ACTIONS],
+      ()=> api.getPanicsList().then(r=>setData(r)), true)
   },[])
   return <div className={style.container}>
     {data && <TableComponent 

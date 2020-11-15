@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography'
 
 import {Link} from 'react-router-dom'
 import { AppDrawer } from '../AppDrawer'
+import { OnlineIndicator } from '../OnlineIndicator/OnlineIndicator'
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -32,6 +33,8 @@ export function Header() {
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
           <Link className={classes.homeLink} to="/Home">Interface</Link>
+          {' '}
+          <OnlineIndicator></OnlineIndicator>
         </Typography>
         <div>
           <AppDrawer />

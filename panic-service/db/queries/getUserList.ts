@@ -14,12 +14,12 @@ export function getUserList(userProperties?: Partial<IUser>): [string]{
     if(entries.length) {
       const userFieldsString = entries.reduce((acc, [key, value], index, {length})=>{
         acc += `u.${key} = '${value}'`
-        if(index !== length -1) acc+=', '
+        if(index !== length -1) acc+=' and '
         return acc
       }, '')
       query+=`where ${userFieldsString}`
     }
   }
 
-  return [query+';']
+  return [query+' ORDER BY u.id ASC;']
 }

@@ -18,16 +18,18 @@ export function getGuardsList(guardsProperties?: Partial<IGuard>): [string]{
     if(entries.length) {
       const userFieldsString = entries.reduce((acc, [key, value], index, {length})=>{
         acc += `${key === 'id' ? 'guards.id' : key} = '${value}'`
-        if(index !== length -1) acc+=', '
+        if(index !== length-1) acc+=' and '
         return acc
       }, '')
       query+=`where ${userFieldsString}`
     }
     if(geolocation){
       const { lon, lat } = geolocation
-      query+=`ORDER BY ST_Distance(guards.geolocation , ST_GeographyFromText('Point(${lon} ${lat})')) ASC;`
-    }
+      query+=` ORDER BY ST_Distance(guards.geolocation, ST_GeographyFromText('Point(${lon} ${lat})')) ASC,`
+    } else query+=' ORDER BY'
+  } else {
+    query+=' ORDER BY'
   }
 
-  return [query+';']
+  return [query+' guards.id ASC;']
 }

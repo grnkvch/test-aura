@@ -15,7 +15,7 @@ const availabilitySchema = Joi.object({
   available: Joi.boolean().required(),
 })
 
-Joi.object({
+const paramsSchema = Joi.object({
   id: Joi.number(),
   user_id: Joi.string(),
   name: Joi.string(),
@@ -77,10 +77,10 @@ export class Guard implements Partial<IGuard> {
       let properties
       if( this.queryStringParameters){
         const  { close_to, ...rest } = this.queryStringParameters
-        rest.geolocation = parseCloseToParameter(close_to)
+        if (close_to) rest.geolocation = parseCloseToParameter(close_to)
         properties = rest
       }
-      return validateSchema(()=>db.getGuardsList(properties))
+      return validateSchema(()=>db.getGuardsList(properties), properties, paramsSchema)
     }
 
     getGuard(){

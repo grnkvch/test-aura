@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useApi, TableComponent, Dot } from '../../components'
+import { useApi, TableComponent, Dot, useSocket } from '../../components'
+import { GUARD_ACTIONS, USER_ACTIONS } from '../../constansts/socketActions'
 
 import style from './Guards.module.css'
 
@@ -26,8 +27,14 @@ function createRow({id, name, surname, organization, available, user_id}) {
 export function Guards() {
   const api = useApi()
   const [data, setData] = useState(null)
+  const { subscribe } = useSocket()
   useEffect(()=>{
-    api.getGuardsList().then(r=>setData(r))
+    return subscribe([...USER_ACTIONS, ...GUARD_ACTIONS],
+      ({ user_role }={})=> {
+        (user_role && user_role!=='guard')
+          || api.getGuardsList().then(r=>setData(r))
+      },
+      true)
   },[])
   return <div className={style.container}>
     {data && <TableComponent 

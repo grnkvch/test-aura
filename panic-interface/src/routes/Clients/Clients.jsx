@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useApi, TableComponent } from '../../components'
+import { useApi, TableComponent, useSocket } from '../../components'
+import { USER_ACTIONS } from '../../constansts/socketActions'
 
 import style from './Clients.module.css'
 
@@ -17,8 +18,14 @@ function createRow({n, name, surname, organization, id}) {
 export function Clients() {
   const api = useApi()
   const [data, setData] = useState(null)
+
+  const { subscribe } = useSocket()
+  
   useEffect(()=>{
-    api.getClientsList().then(r=>setData(r))
+    return subscribe(USER_ACTIONS,
+      ({ user_role }={})=> (user_role && user_role!=='client')
+      || api.getClientsList().then(r=>setData(r)),
+      true)
   },[])
   return <div className={style.container}>
     {data && <TableComponent 
