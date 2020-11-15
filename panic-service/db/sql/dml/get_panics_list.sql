@@ -5,4 +5,5 @@ select
   p.resolved_at,
   p.user_id,
   p.guard_id
-from panics p where guard_id = 5;
+from panics p where guard_id = 5
+ORDER BY p.created_at DESC;

@@ -25,9 +25,11 @@ export function getGuardsList(guardsProperties?: Partial<IGuard>): [string]{
     }
     if(geolocation){
       const { lon, lat } = geolocation
-      query+=` ORDER BY ST_Distance(guards.geolocation, ST_GeographyFromText('Point(${lon} ${lat})')) ASC`
-    }
+      query+=` ORDER BY ST_Distance(guards.geolocation, ST_GeographyFromText('Point(${lon} ${lat})')) ASC,`
+    } else query+=' ORDER BY'
+  } else {
+    query+=' ORDER BY'
   }
-  console.log(query)
-  return [query+';']
+
+  return [query+' guards.id ASC;']
 }

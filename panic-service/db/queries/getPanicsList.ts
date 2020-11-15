@@ -23,5 +23,5 @@ export function getPanicsList(properties?: Pick<Partial<IPanic>, 'id'|'user_id'|
     }
   }
 
-  return [query+';']
+  return [query+' ORDER BY p.created_at DESC;']
 }

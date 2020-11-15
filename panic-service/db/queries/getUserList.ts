@@ -21,5 +21,5 @@ export function getUserList(userProperties?: Partial<IUser>): [string]{
     }
   }
 
-  return [query+';']
+  return [query+' ORDER BY u.id ASC;']
 }

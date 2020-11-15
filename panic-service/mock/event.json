@@ -4,7 +4,7 @@
     "path": "/path/to/resource",
     "httpMethod": "POST",
     "isBase64Encoded": true,
-    "queryStringParameters": { "surname": "Rossi", "name": "Nikolas", "available": true, "close_to": "27.36253,53.317779" },
+    "queryStringParameters": { "user_id": "c7c34440-f155-4b98-aa50-0d49464feeb3" },
     "multiValueQueryStringParameters": null,
     "pathParameters": { "id": "f8864f7a-0d5a-4a5f-b6f0-39d4b308578f" },
     "stageVariables": null,

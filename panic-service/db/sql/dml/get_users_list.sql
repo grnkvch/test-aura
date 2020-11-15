@@ -4,4 +4,5 @@ select
   u.surname,
   u.organization,
   u.user_role
-from users u where u.name = 'John';
+from users u where u.name = 'John'
+ORDER BY u.id ASC;
