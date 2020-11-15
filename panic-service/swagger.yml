@@ -1,0 +1,592 @@
+openapi: 3.0.0
+info:
+  title: PANIC API
+  version: 0.0.1
+servers:
+  - url: 'https://c1igaz5t6k.execute-api.eu-west-1.amazonaws.com'
+components:
+  schemas:
+    panicDetails:
+      type: object
+      properties:
+        id: 
+          type: string
+        user_id:
+          type: string
+        guard_id:
+          type: integer
+        gelocation:
+          type: string
+        created_at:
+          type: string
+        resolved_at:
+          type: string
+        user_name:
+          type: string
+        user_surname:
+          type: string
+        user_organization:
+          type: string
+        guard_user_id:
+          type: string
+        guard_name:
+          type: string
+        guard_surname:
+          type: string
+        guard_organization:
+          type: string
+    panic:
+      type: object
+      properties:
+        id:
+          type: string
+        gelocation:
+          type: string
+        created_at:
+          type: string
+        resolved_at:
+          type: string
+        user_id:
+          type: string
+        guard_id:
+          type: integer
+    guardRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+        available:
+          type: boolean
+        gelocation:
+          type: string
+    Guard:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        organization:
+          type: string
+        user_role:
+          $ref: '#/components/schemas/user_role'
+        available:
+          type: boolean
+        gelocation:
+          type: string
+    User:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: Aaminah
+        surname:
+          type: string
+          example: Hartley
+        organization:
+          type: string
+          example: Level Web
+    user_role:
+      type: string
+      enum: 
+        - client
+        - guard
+        - admin
+      example: client
+tags:
+  - name: users
+  - name: guards
+  - name: panics
+paths:
+  /dev/users/:
+    post:
+      tags:
+        - users
+      summary: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+               - $ref: '#/components/schemas/User'
+              properties:
+                user_role:
+                    $ref: '#/components/schemas/user_role'
+      responses:
+        '201':
+          description: Successful response
+          content:
+            application/json: 
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/User'
+                required:
+                  - user_role
+                properties:
+                  user_role:
+                      $ref: '#/components/schemas/user_role'
+                  id: 
+                    type: string
+                    example: 00241df5-c795-47f4-816b-2bdf1d9aea0c
+                
+  '/dev/users/{id}':
+    delete:
+      tags:
+        - users
+      summary: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to delete
+          required: true
+          schema:
+            type: string
+            example: 00241df5-c795-47f4-816b-2bdf1d9aea0c
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: 
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/User'
+                properties:
+                  user_role:
+                        $ref: '#/components/schemas/user_role'
+                  id: 
+                    type: string
+                    example: 00241df5-c795-47f4-816b-2bdf1d9aea0c
+    put:
+      tags:
+        - users
+      summary: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to update
+          required: true
+          schema:
+            type: string
+            example: 00241df5-c795-47f4-816b-2bdf1d9aea0c
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: 
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/User'
+                properties:
+                  user_role:
+                        $ref: '#/components/schemas/user_role'
+                  id: 
+                    type: string
+                    example: 00241df5-c795-47f4-816b-2bdf1d9aea0c
+    get:
+      tags:
+        - users
+      summary: getUser
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to get
+          required: true
+          schema:
+            type: string
+            example: 00241df5-c795-47f4-816b-2bdf1d9aea0c
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/User'
+                properties:
+                  user_role:
+                        $ref: '#/components/schemas/user_role'
+                  id: 
+                    type: string
+                    example: 00241df5-c795-47f4-816b-2bdf1d9aea0c
+  /dev/users:
+    get:
+      tags:
+        - users
+      summary: getUsersList
+      parameters:
+        - name: user_role
+          in: query
+          schema:
+            type: string
+            example: guard
+        - name: name
+          in: query
+          schema:
+            type: string
+            example: Leen
+        - name: surname
+          in: query
+          schema:
+            type: string
+            example: Gray
+        - name: organization
+          in: query
+          schema:
+            type: string
+            example: Acumen Protection
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: 8c235e3b-7f35-4dba-8b87-0f482f6df37d
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: '#/components/schemas/User'
+                  properties:
+                    user_role:
+                          $ref: '#/components/schemas/user_role'
+                    id: 
+                      type: string
+                      example: 00241df5-c795-47f4-816b-2bdf1d9aea0c
+                example:
+                  - id: 8c235e3b-7f35-4dba-8b87-0f482f6df37d
+                    name: Leen
+                    surname: Gray
+                    organization: Acumen Protection
+                    user_role: guard
+
+  /dev/guards:
+    get:
+      tags:
+        - guards
+      summary: getGuardsList
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: integer
+            example: 11
+        - name: user_id
+          in: query
+          schema:
+            type: string
+            example: c7c34440-f155-4b98-aa50-0d49464feeb3
+        - name: name
+          in: query
+          schema:
+            type: string
+            example: Nikolas
+        - name: surname
+          in: query
+          schema:
+            type: string
+            example: Rossi
+        - name: organization
+          in: query
+          schema:
+            type: string
+            example: Acumen Protection
+        - name: user_role
+          in: query
+          schema:
+            type: string
+            example: guard
+        - name: available
+          in: query
+          schema:
+            type: boolean
+            example: true
+        - name: close_to
+          in: query
+          schema:
+            type: string
+            example: 27.51422,53.916426
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Guard'
+                example:
+                  - id: 11,
+                    user_id: c7c34440-f155-4b98-aa50-0d49464feeb3
+                    name: Nikolas
+                    surname: Rossi
+                    organization: Acumen Protection
+                    user_role: guard
+                    available: true
+                    gelocation: POINT(27.987531 53.198335)
+  '/dev/guards/{id}':
+    get:
+      tags:
+        - guards
+      summary: getGuard
+      parameters:
+        - name: id
+          in: path
+          description: ID of guard to get
+          required: true
+          schema:
+            type: integer
+            example: 18
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: 
+              schema:
+                  $ref: '#/components/schemas/Guard'
+              example:
+                id: 18,
+                user_id: dfcfcea7-11ee-41dc-8f60-af016380592a
+                name: Olivia-Rose
+                surname: Blackburn
+                organization: Journal Guard
+                user_role: guard
+                available: false
+                gelocation: POINT(27.225658 53.575578)
+  '/dev/guards/{id}/updateGeolocation':
+    put:
+      tags:
+        - guards
+      summary: updateGeolocation
+      parameters:
+        - name: id
+          in: path
+          description: ID of guard to get
+          required: true
+          schema:
+            type: integer
+            example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                geolocation:
+                  lat: 52.243009
+                  lon: 26.317444
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/guardRecord'
+              example:
+                id: 3
+                user_id: e963a784-23f3-46c7-bb01-77cfd1f94e64
+                available: false
+                gelocation: POINT(26.317444 52.243009)
+  '/dev/guards/{id}/updateAvailability':
+    put:
+      tags:
+        - guards
+      summary: updateAvailability
+      parameters:
+        - name: id
+          in: path
+          description: ID of guard to get
+          required: true
+          schema:
+            type: integer
+            example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                available: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/guardRecord'
+              example:
+                id: 3
+                user_id: e963a784-23f3-46c7-bb01-77cfd1f94e64
+                available: true
+                gelocation: POINT(26.317444 52.243009)
+  '/dev/panics/{id}':
+    get:
+      tags:
+        - panics
+      summary: getPanic
+      parameters:
+        - name: id
+          in: path
+          description: ID of panic to get
+          required: true
+          schema:
+            type: string
+            example: 40915526-3198-4d31-8be0-ef6360ea5e69
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/panicDetails'
+              example:
+                id: 40915526-3198-4d31-8be0-ef6360ea5e69
+                user_id: 22a0e7e5-1142-4b1f-b0f2-0ba34a631394
+                guard_id: 5
+                gelocation: POINT(26.317444 52.283009)
+                created_at: 2020-11-15T10:52:52.696Z
+                resolved_at: 2020-11-15T11:04:19.974Z
+                user_name: Kallum
+                user_surname: Lara
+                user_organization: Change Advertising
+                guard_user_id: 029377fb-7825-4502-8daa-515027d49a7b
+                guard_name: Ellie
+                guard_surname: Lowery
+                guard_organization: Journal Guard
+  /dev/panics/:
+    get:
+      tags:
+        - panics
+      summary: getPanicList
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/panic'
+              example:
+                - id: 40915526-3198-4d31-8be0-ef6360ea5e69
+                  gelocation: POINT(26.317444 52.283009)
+                  created_at: 2020-11-15T10:52:52.696Z
+                  resolved_at: null
+                  user_id: 22a0e7e5-1142-4b1f-b0f2-0ba34a631394
+                  guard_id: null
+                - id: 7f98b260-33c9-4822-ad69-6e928af26228
+                  gelocation: POINT(27.390303 53.013662)
+                  created_at: 2020-11-12T14:50:10.680Z
+                  resolved_at: 2020-11-12T14:48:00.026Z
+                  user_id: 5e5de8f2-a152-4285-b7a2-f072ae5bb1ee
+                  guard_id: 22
+    post:
+      tags:
+        - panics
+      summary: createPanic
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              user_id: 22a0e7e5-1142-4b1f-b0f2-0ba34a631394
+              geolocation:
+                lat: 52.283009
+                lon: 26.317444
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/panic'
+                example:
+                  id: 40915526-3198-4d31-8be0-ef6360ea5e69
+                  user_id: 22a0e7e5-1142-4b1f-b0f2-0ba34a631394
+                  guard_id: null
+                  gelocation: POINT(26.317444 52.283009)
+                  created_at: 2020-11-15T10:52:52.696Z
+                  resolved_at: null
+  '/dev/panics/{id}/attachGurad':
+    put:
+      tags:
+        - panics
+      summary: attachGurad
+      parameters:
+        - name: id
+          in: path
+          description: ID of panic to update
+          required: true
+          schema:
+            type: string
+            example: 40915526-3198-4d31-8be0-ef6360ea5e69
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                guard_id: 3
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/panic'
+              example:
+                id: 40915526-3198-4d31-8be0-ef6360ea5e69
+                user_id: 22a0e7e5-1142-4b1f-b0f2-0ba34a631394
+                guard_id: 5
+                gelocation: POINT(26.317444 52.283009)
+                created_at: 2020-11-15T10:52:52.696Z
+                resolved_at: null
+  '/dev/panics/{id}/resolve':
+    put:
+      tags:
+        - panics
+      summary: resolve
+      parameters:
+        - name: id
+          in: path
+          description: ID of panic to update
+          required: true
+          schema:
+            type: string
+            example: 40915526-3198-4d31-8be0-ef6360ea5e69
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/panic'
+              example:
+                id: 40915526-3198-4d31-8be0-ef6360ea5e69
+                user_id: 22a0e7e5-1142-4b1f-b0f2-0ba34a631394
+                guard_id: 5
+                gelocation: POINT(26.317444 52.283009)
+                created_at: 2020-11-15T10:52:52.696Z
+                resolved_at: 2020-11-15T11:03:49.637Z
