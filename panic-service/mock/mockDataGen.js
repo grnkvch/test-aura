@@ -49,7 +49,6 @@ const a = namesArray.reduce((acc, i, index)=>{
   GURADS_COUNT += 1
   const id = uuid.v4()
   guardsUuid.push(id)
-  console.log()
   acc.guards[id] = (`('${id}','${i[0]}', '${i[1]}', '${guardArray[randomFloat(0, guardArray.length - 1, 0)]}', 'guard')`)
   return acc
 }, {

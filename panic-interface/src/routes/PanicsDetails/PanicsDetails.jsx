@@ -62,7 +62,7 @@ export function PanicsDetails() {
     (data)=>{
       if(shouldUpdatePanic(data, info)) {
         api.getPanic(id).then(r => setInfo(r))
-          .catch((e)=>console.log(e))
+          .catch((e)=>console.error(e))
       }
     }, [info])
 
@@ -104,8 +104,6 @@ export function PanicsDetails() {
     }
   }, [popup])
 
-
-  console.log(popup)
   if (isLoading) return <p>loading...</p>
   return (
     <div className={style.container}>
@@ -127,7 +125,7 @@ export function PanicsDetails() {
                   </Button>}
                 </Grid>
                 <Grid item container xs={6} justify="flex-end">
-                  {info && !info.guard_id && <Button
+                  {info && !info.resolved_at && !info.guard_id && <Button
                     type="button"
                     variant="contained"
                     color="primary"
