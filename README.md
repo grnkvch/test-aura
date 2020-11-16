@@ -11,6 +11,7 @@
    - marker clustering
   - List of panics
   - List of guards
+  - List of clients
   - User's edit and creation page
   - Panic's details page
     - map with panic marker and attached or available guards
