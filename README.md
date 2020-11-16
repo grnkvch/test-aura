@@ -19,3 +19,4 @@
     - possibility to resolve panic
     - possibility to attach closest guard
     - possibility to attach any available guard from the map
+  - Recieving live update from server
